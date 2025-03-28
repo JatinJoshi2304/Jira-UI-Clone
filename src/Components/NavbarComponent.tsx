@@ -1,4 +1,3 @@
-import React from "react";
 import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
 // import SwitchRightIcon from '@mui/icons-material/SwitchRight';
 import AppsIcon from "@mui/icons-material/Apps";

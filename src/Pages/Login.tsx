@@ -1,5 +1,3 @@
-import React from "react";
-import ReactDOM from "react-dom";
 // import { ErrorMessage } from "@hookform/error-message";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
