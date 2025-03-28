@@ -114,7 +114,7 @@ export default function App() {
       <Button type="submit" color="primary" variant="contained">
         Signup
       </Button>
-      <Link to="/login">Already Registered? | Login </Link>
+      <Link to="/">Already Registered? | Login </Link>
     </form>
   );
 }
