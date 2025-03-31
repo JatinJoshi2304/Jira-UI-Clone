@@ -1,14 +1,28 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import Button from "@mui/material/Button";
 import { Link, useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { signupUser } from "../action/authAction";
+// import * as yup from "yup";
+
+// let userSchema = yup.object().shape({
+//   fullName: yup.string().required().max(50).oneOf(["Fullname is required"]),
+//   email: yup.string().email(),
+//   password: yup.string().required().min(6),
+//   department: yup.string().required().max(50).oneOf(["Department is required"]),
+//   role: yup.string().required().max(50).oneOf(["Role is required"]),
+//   reportingManager: yup
+//     .string()
+//     .required()
+//     .max(50)
+//     .oneOf(["ReportingManager is required"]),
+// });
 
 enum departmentEnum {
   Mern = "Mern",
   Python = "Python",
   HR = "HR",
 }
-
-// type messages = string;
 
 interface IFormInput {
   fullName: string;
@@ -26,9 +40,12 @@ export default function App() {
     // formState: { errors },
     handleSubmit,
   } = useForm<IFormInput>();
+
+  const dispatch = useDispatch();
+
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    alert(JSON.stringify(data));
-    navigate("/login");
+    dispatch(signupUser(data));
+    navigate("/dashboard");
   };
 
   return (
@@ -36,7 +53,7 @@ export default function App() {
       className="w-1/3 m-auto mt-10 p-5 flex flex-col items-center gap-5 border border-[#BFC1C4] rounded-[6px]"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h1>Signup Page</h1>
+      <h1 className="font-bold">Signup Page</h1>
       <div className="container flex justify-between">
         <label>Full Name</label>
         <input

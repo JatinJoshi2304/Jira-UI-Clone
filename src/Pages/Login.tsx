@@ -2,6 +2,8 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import Button from "@mui/material/Button";
+import { loginUser } from "../action/authAction";
+import { useDispatch } from "react-redux";
 
 interface IFormInput {
   email: string;
@@ -11,8 +13,9 @@ interface IFormInput {
 export default function Login() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<IFormInput>();
+  const dispatch = useDispatch();
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    alert(JSON.stringify(data));
+    dispatch(loginUser(data));
     navigate("/dashboard");
   };
 
@@ -21,7 +24,7 @@ export default function Login() {
       className="w-1/3 m-auto mt-10 p-5 flex flex-col items-center gap-5 border border-[#BFC1C4] rounded-[6px]"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h1 className="">Login Page</h1>
+      <h1 className="font-bold">Login Page</h1>
       <div className="container flex justify-between">
         <label>Email</label>
         <input

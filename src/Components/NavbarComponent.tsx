@@ -1,5 +1,4 @@
 import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
-// import SwitchRightIcon from '@mui/icons-material/SwitchRight';
 import AppsIcon from "@mui/icons-material/Apps";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -8,7 +7,6 @@ import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Person2Icon from "@mui/icons-material/Person2";
-// import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import JeraIcon from "../assets/JeraIcon.png";
 
