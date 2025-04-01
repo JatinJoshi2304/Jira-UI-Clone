@@ -22,16 +22,7 @@ const Dashboard = () => {
           </div>
         </div>
       ) : (
-        <div className="ml-65">
-          <div className="m-3 flex gap-1">
-            <Button variant="contained">
-              <Link to="/"> Login </Link>
-            </Button>
-            <Button variant="contained">
-              <Link to="/signup"> signup </Link>
-            </Button>
-          </div>
-        </div>
+        <div className="ml-65">Login to access</div>
       )}
     </>
   );

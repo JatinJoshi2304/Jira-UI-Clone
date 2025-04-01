@@ -16,7 +16,7 @@ interface UserLogin {
 
 interface AuthState {
   isAuthenticated: boolean;
-  user: User;
+  user: User | null;
   error: string | null;
 }
 
@@ -39,8 +39,8 @@ const authSlice = createSlice({
   reducers: {
     login: (state, action: PayloadAction<UserLogin>) => {
       if (
-        state.user.email === action.payload.email &&
-        state.user.password === action.payload.password
+        state.user?.email === action.payload.email &&
+        state.user?.password === action.payload.password
       ) {
         state.isAuthenticated = true;
         state.error = null;
@@ -53,9 +53,15 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.error = null;
     },
+    logout: (state) => {
+      //   state.user = action.payload;
+      state.isAuthenticated = false;
+      state.user = null;
+      state.error = null;
+    },
   },
 });
 
-export const { login, signup } = authSlice.actions;
+export const { login, signup, logout } = authSlice.actions;
 
 export default authSlice.reducer;

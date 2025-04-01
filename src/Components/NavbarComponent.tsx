@@ -19,10 +19,15 @@ import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/authSlice";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
 export default function ClippedDrawer() {
+  const dispatch = useDispatch();
+  const state: any = useSelector((state) => state);
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -122,12 +127,36 @@ export default function ClippedDrawer() {
               </ListItem>
             ))}
           </List>
+          {!state.auth.isAuthenticated ? (
+            <Button
+              sx={{ width: "80%", marginX: "15px", color: "#bfc1c4" }}
+              type="submit"
+              color="info"
+              // color: "#bfc1c4"
+              variant="outlined"
+              onClick={() => {}}
+            >
+              <Link to="/">Login </Link>
+            </Button>
+          ) : (
+            <Button
+              sx={{ width: "80%", marginX: "15px", color: "#bfc1c4" }}
+              type="submit"
+              color="info"
+              // color: "#bfc1c4"
+              variant="outlined"
+              onClick={() => {
+                dispatch(logout());
+              }}
+            >
+              Logout
+            </Button>
+          )}
+
           <Divider />
         </Box>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, pl: 5, pt: 8 }}>
-        {/* <Dashboard /> */}
-      </Box>
+      <Box component="main" sx={{ flexGrow: 1, pl: 5, pt: 8 }}></Box>
     </Box>
   );
 }
