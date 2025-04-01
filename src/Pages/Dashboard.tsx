@@ -1,17 +1,38 @@
+import { Button } from "@mui/material";
 import { useSelector } from "react-redux";
-
+import { Link } from "react-router-dom";
+import NavbarComponent from "./../Components/NavbarComponent";
 const Dashboard = () => {
   const state: any = useSelector((state) => state);
+
   return (
     <>
-      <div className="main">Profile</div>
-      <div className="continer">FullName : {state.auth.user?.fullName}</div>
-      <div className="continer">Email : {state.auth.user?.email}</div>
-      <div className="continer">Department : {state.auth.user?.department}</div>
-      <div className="continer">Role : {state.auth.user?.role}</div>
-      <div className="continer">
-        Reporting Manager : {state.auth.user?.reportingManager}
-      </div>
+      <NavbarComponent />
+      {state.auth.isAuthenticated ? (
+        <div className="ml-65">
+          <div className="main">Profile</div>
+          <div className="continer">FullName : {state.auth.user?.fullName}</div>
+          <div className="continer">Email : {state.auth.user?.email}</div>
+          <div className="continer">
+            Department : {state.auth.user?.department}
+          </div>
+          <div className="continer">Role : {state.auth.user?.role}</div>
+          <div className="continer">
+            Reporting Manager : {state.auth.user?.reportingManager}
+          </div>
+        </div>
+      ) : (
+        <div className="ml-65">
+          <div className="m-3 flex gap-1">
+            <Button variant="contained">
+              <Link to="/"> Login </Link>
+            </Button>
+            <Button variant="contained">
+              <Link to="/signup"> signup </Link>
+            </Button>
+          </div>
+        </div>
+      )}
     </>
   );
 };

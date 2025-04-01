@@ -2,10 +2,11 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import Button from "@mui/material/Button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { login } from "../redux/authSlice";
+import { useEffect } from "react";
 
 interface IFormInput {
   email: string;
@@ -23,6 +24,7 @@ const userSchema = yup.object().shape({
 // Login fields: Email and password
 export default function Login() {
   const navigate = useNavigate();
+  const state: any = useSelector((state) => state);
   const {
     register,
     formState: { errors },
@@ -33,8 +35,14 @@ export default function Login() {
     console.log(data);
     const user = { email: data.email, password: data.password };
     dispatch(login(user));
-    navigate("/dashboard");
+    // navigate("/dashboard");
   };
+
+  useEffect(() => {
+    if (state.auth.isAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, [state]);
 
   return (
     <form
@@ -80,6 +88,9 @@ export default function Login() {
           )}
         </div>
       </div>
+
+      {state.auth.isAuthenticated && "Login successful!"}
+      {state.auth.error && "Invalid Email or Password"}
 
       <Button type="submit" color="primary" variant="contained">
         Login

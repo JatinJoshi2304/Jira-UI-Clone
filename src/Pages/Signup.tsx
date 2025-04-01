@@ -59,7 +59,7 @@ export default function App() {
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     dispatch(signup(data));
-    navigate("/dashboard");
+    navigate("/");
   };
 
   return (

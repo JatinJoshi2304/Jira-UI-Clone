@@ -17,6 +17,7 @@ interface UserLogin {
 interface AuthState {
   isAuthenticated: boolean;
   user: User;
+  error: string | null;
 }
 
 const initialState: AuthState = {
@@ -29,6 +30,7 @@ const initialState: AuthState = {
     role: "",
     reportingManager: "",
   },
+  error: null,
 };
 
 const authSlice = createSlice({
@@ -41,13 +43,15 @@ const authSlice = createSlice({
         state.user.password === action.payload.password
       ) {
         state.isAuthenticated = true;
+        state.error = null;
       } else {
-        state.isAuthenticated = true;
+        state.isAuthenticated = false;
+        state.error = "Invalid Email or Password";
       }
     },
     signup: (state, action: PayloadAction<User>) => {
-      state.isAuthenticated = true;
       state.user = action.payload;
+      state.error = null;
     },
   },
 });
