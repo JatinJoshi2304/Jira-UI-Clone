@@ -1,6 +1,4 @@
-import { Button } from "@mui/material";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import NavbarComponent from "./../Components/NavbarComponent";
 const Dashboard = () => {
   const state: any = useSelector((state) => state);
