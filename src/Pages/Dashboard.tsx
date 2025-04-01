@@ -5,12 +5,12 @@ const Dashboard = () => {
   return (
     <>
       <div className="main">Profile</div>
-      <div className="continer">FullName : {state.profile.fullName}</div>
-      <div className="continer">Email : {state.profile.email}</div>
-      <div className="continer">Department : {state.profile.department}</div>
-      <div className="continer">Role : {state.profile.role}</div>
+      <div className="continer">FullName : {state.auth.user?.fullName}</div>
+      <div className="continer">Email : {state.auth.user?.email}</div>
+      <div className="continer">Department : {state.auth.user?.department}</div>
+      <div className="continer">Role : {state.auth.user?.role}</div>
       <div className="continer">
-        Reporting Manager : {state.profile.reportingManager}
+        Reporting Manager : {state.auth.user?.reportingManager}
       </div>
     </>
   );

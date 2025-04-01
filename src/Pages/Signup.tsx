@@ -1,22 +1,10 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import Button from "@mui/material/Button";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { signupUser } from "../action/authAction";
-// import * as yup from "yup";
-
-// let userSchema = yup.object().shape({
-//   fullName: yup.string().required().max(50).oneOf(["Fullname is required"]),
-//   email: yup.string().email(),
-//   password: yup.string().required().min(6),
-//   department: yup.string().required().max(50).oneOf(["Department is required"]),
-//   role: yup.string().required().max(50).oneOf(["Role is required"]),
-//   reportingManager: yup
-//     .string()
-//     .required()
-//     .max(50)
-//     .oneOf(["ReportingManager is required"]),
-// });
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { signup } from "../redux/authSlice";
 
 enum departmentEnum {
   Mern = "Mern",
@@ -32,19 +20,45 @@ interface IFormInput {
   role: string;
   reportingManager: string;
 }
-// fullName, email, password, department, role, reportingManager
+
+const userSchema = yup.object().shape({
+  fullName: yup
+    .string()
+    .required("Required")
+    .max(50, "Fullname should not exceed 50 Characters"),
+  email: yup.string().email("Invalid email address").required("Required"),
+  password: yup
+    .string()
+    .min(8, "Must be at least 8 characters")
+    .required("Required"),
+  department: yup
+    .mixed<departmentEnum>()
+    .required("Required")
+    .oneOf(Object.values(departmentEnum), "Invalid department"),
+  role: yup
+    .string()
+    .required("Required")
+    .max(50, "Role should not exceed 50 Characters"),
+  reportingManager: yup
+    .string()
+    .required("Required")
+    .max(50, "Reporting Manager should not exceed 50 Characters"),
+});
+
 export default function App() {
   const navigate = useNavigate();
   const {
     register,
-    // formState: { errors },
+    formState: { errors },
     handleSubmit,
-  } = useForm<IFormInput>();
+  } = useForm<IFormInput>({
+    resolver: yupResolver(userSchema),
+  });
 
   const dispatch = useDispatch();
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    dispatch(signupUser(data));
+    dispatch(signup(data));
     navigate("/dashboard");
   };
 
@@ -56,75 +70,108 @@ export default function App() {
       <h1 className="font-bold">Signup Page</h1>
       <div className="container flex justify-between">
         <label>Full Name</label>
-        <input
-          className=" p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
-          {...register("fullName", { maxLength: 50 })}
-          type="text"
-          required
-        />
+        <div>
+          <input
+            className=" p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
+            {...register("fullName")}
+            type="text"
+          />
+          {errors.fullName?.type === "required" && (
+            <p className="text-red-600">Full Name is required</p>
+          )}
+          {errors.fullName?.type === "max" && (
+            <p className="text-red-600">
+              Full Name should not exceed 50 Characters
+            </p>
+          )}
+        </div>
       </div>
+
       <div className="container flex justify-between">
         <label>Email</label>
-        <input
-          className="p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
-          {...register("email", { required: true })}
-          type="email"
-          required
-        />
+        <div>
+          <input
+            className="p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
+            {...register("email")}
+            type="email"
+          />
+          {errors.email?.type === "required" && (
+            <p className="text-red-600">Email is required</p>
+          )}
+          {errors.email?.type === "email" && (
+            <p className="text-red-600">Invalid email address</p>
+          )}
+        </div>
       </div>
+
       <div className="container flex justify-between">
         <label>Password</label>
-        <input
-          className=" p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
-          {...register("password", {
-            required: "Password is required",
-            minLength: {
-              value: 8,
-              message: "This input must exceed 8 characters",
-            },
-          })}
-          type="password"
-        />
+        <div>
+          <input
+            className=" p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
+            {...register("password")}
+            type="password"
+          />
+          {errors.password?.type === "required" && (
+            <p className="text-red-600 ">Password is required</p>
+          )}
+          {errors.password?.type === "min" && (
+            <p className="text-red-600">Password must be 8 characters</p>
+          )}
+        </div>
       </div>
+
       <div className="container flex justify-between">
         <label>Department</label>
-        <select
-          className="p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
-          {...register("department")}
-          required
-        >
-          <option value="Mern">Mern</option>
-          <option value="Python">Python</option>
-          <option value="HR">HR</option>
-        </select>
+        <div>
+          <select
+            className="p-1 pl-[10px] border border-[#BFC1C4] rounded-[6px]"
+            {...register("department")}
+          >
+            <option value="" selected disabled hidden>
+              Choose here
+            </option>
+            <option value="Mern">Mern</option>
+            <option value="Python">Python</option>
+            <option value="HR">HR</option>
+          </select>
+          {errors.department?.type === "required" && (
+            <p className="text-red-600">Department is required</p>
+          )}
+          {errors.department?.type === "oneOf" && (
+            <p className="text-red-600">Invalid department</p>
+          )}
+        </div>
       </div>
+
       <div className="container flex justify-between">
         <label>Role</label>
-        <input
-          className=" p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
-          {...register("role")}
-          type="text"
-          required
-        />
+        <div>
+          <input
+            className=" p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
+            {...register("role")}
+            type="text"
+          />
+          {errors.role?.type === "required" && (
+            <p className="text-red-600">Role is required</p>
+          )}
+        </div>
       </div>
+
       <div className="container flex justify-between">
         <label>Reporting Manager</label>
-        <input
-          className=" p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
-          {...register("reportingManager")}
-          type="text"
-          required
-        />
+        <div>
+          <input
+            className=" p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
+            {...register("reportingManager")}
+            type="text"
+          />
+          {errors.reportingManager?.type === "required" && (
+            <p className="text-red-600">Reporting Manager is required</p>
+          )}
+        </div>
       </div>
-      {/* <ErrorMessage
-        errors={errors}
-        name="password"
-        render={({ message<error> }) => {
-        //   console.log("messages", messages);
-          return message;
-        }}
-      /> */}
-      {/* <input type="submit" /> */}
+
       <Button type="submit" color="primary" variant="contained">
         Signup
       </Button>
