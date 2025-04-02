@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signup } from "../redux/authSlice";
+import JiralogoBGW from "../assets/jiralogoBGW.png";
 
 enum departmentEnum {
   Mern = "Mern",
@@ -21,12 +22,18 @@ interface IFormInput {
   reportingManager: string;
 }
 
+let EMAIL_REGX = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+let NAME_REGX = /^[a-zA-Z]/;
 const userSchema = yup.object().shape({
   fullName: yup
     .string()
     .required("Required")
-    .max(50, "Fullname should not exceed 50 Characters"),
-  email: yup.string().email("Invalid email address").required("Required"),
+    .max(50, "Fullname should not exceed 50 Characters")
+    .matches(NAME_REGX, "Invalid Fullname"),
+  email: yup
+    .string()
+    .required("Email address Required")
+    .matches(EMAIL_REGX, "Invalid Email"),
   password: yup
     .string()
     .min(8, "Must be at least 8 characters")
@@ -38,11 +45,13 @@ const userSchema = yup.object().shape({
   role: yup
     .string()
     .required("Required")
-    .max(50, "Role should not exceed 50 Characters"),
+    .max(50, "Role should not exceed 50 Characters")
+    .matches(NAME_REGX, "Invalid Role"),
   reportingManager: yup
     .string()
     .required("Required")
-    .max(50, "Reporting Manager should not exceed 50 Characters"),
+    .max(50, "Reporting Manager should not exceed 50 Characters")
+    .matches(NAME_REGX, "Invalid Reporting Manager"),
 });
 
 export default function App() {
@@ -53,6 +62,7 @@ export default function App() {
     handleSubmit,
   } = useForm<IFormInput>({
     resolver: yupResolver(userSchema),
+    mode: "onTouched",
   });
 
   const dispatch = useDispatch();
@@ -64,118 +74,129 @@ export default function App() {
 
   return (
     <form
-      className="w-1/3 m-auto mt-10 p-5 flex flex-col items-center gap-5 border border-[#BFC1C4] rounded-[6px]"
+      className="w-1/2 m-auto mt-10 p-8 bg-white shadow-lg rounded-lg flex flex-col items-center gap-4 border border-[#BFC1C4]"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h1 className="font-bold">Signup Page</h1>
-      <div className="container flex justify-between">
-        <label>Full Name</label>
-        <div>
-          <input
-            className=" p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
-            {...register("fullName")}
-            type="text"
-          />
-          {errors.fullName?.type === "required" && (
-            <p className="text-red-600">Full Name is required</p>
-          )}
-          {errors.fullName?.type === "max" && (
-            <p className="text-red-600">
-              Full Name should not exceed 50 Characters
-            </p>
-          )}
-        </div>
+      <div>
+        <img className="h-20" src={JiralogoBGW} />
+        <h1 className="text-2xl font-bold text-center text-gray-700">
+          Signup Page
+        </h1>
       </div>
-
-      <div className="container flex justify-between">
-        <label>Email</label>
-        <div>
+      <div className="w-full flex flex-col gap-2">
+        <label htmlFor="fullName" className="text-gray-700">
+          Full Name
+        </label>
+        <input
+          id="fullName"
+          className="p-3 border border-[#BFC1C4] rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-700 focus:ring-blue-500"
+          {...register("fullName")}
+          type="text"
+          placeholder="Enter your full name"
+        />
+        {errors.fullName && (
+          <p className="text-red-600 text-sm">{errors.fullName.message}</p>
+        )}
+      </div>
+      <div className="flex gap-1 w-full">
+        <div className="w-1/2 flex flex-col gap-2">
+          <label htmlFor="email" className="text-gray-700">
+            Email
+          </label>
           <input
-            className="p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
+            id="email"
+            className="p-3 border border-[#BFC1C4] rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-700 focus:ring-blue-500"
             {...register("email")}
-            type="email"
+            placeholder="Enter your email"
           />
-          {errors.email?.type === "required" && (
-            <p className="text-red-600">Email is required</p>
-          )}
-          {errors.email?.type === "email" && (
-            <p className="text-red-600">Invalid email address</p>
+          {errors.email && (
+            <p className="text-red-600 text-sm">{errors.email.message}</p>
           )}
         </div>
-      </div>
 
-      <div className="container flex justify-between">
-        <label>Password</label>
-        <div>
+        <div className="w-1/2 flex flex-col gap-2">
+          <label htmlFor="password" className="text-gray-700">
+            Password
+          </label>
           <input
-            className=" p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
+            id="password"
+            className="p-3 border border-[#BFC1C4] rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-700 focus:ring-blue-500"
             {...register("password")}
             type="password"
+            placeholder="Enter your password"
           />
-          {errors.password?.type === "required" && (
-            <p className="text-red-600 ">Password is required</p>
-          )}
-          {errors.password?.type === "min" && (
-            <p className="text-red-600">Password must be 8 characters</p>
+          {errors.password && (
+            <p className="text-red-600 text-sm">{errors.password.message}</p>
           )}
         </div>
       </div>
-
-      <div className="container flex justify-between">
-        <label>Department</label>
-        <div>
+      <div className="flex gap-1 w-full">
+        <div className="w-1/2 flex flex-col gap-2">
+          <label htmlFor="department" className="text-gray-700">
+            Department
+          </label>
           <select
-            className="p-1 pl-[10px] border border-[#BFC1C4] rounded-[6px]"
+            id="department"
+            className="p-3 border border-[#BFC1C4] rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-700 focus:ring-blue-500"
             {...register("department")}
           >
             <option value="" selected disabled hidden>
-              Choose here
+              Choose a department
             </option>
             <option value="Mern">Mern</option>
             <option value="Python">Python</option>
             <option value="HR">HR</option>
           </select>
-          {errors.department?.type === "required" && (
-            <p className="text-red-600">Department is required</p>
-          )}
-          {errors.department?.type === "oneOf" && (
-            <p className="text-red-600">Invalid department</p>
+          {errors.department && (
+            <p className="text-red-600 text-sm">{errors.department.message}</p>
           )}
         </div>
-      </div>
 
-      <div className="container flex justify-between">
-        <label>Role</label>
-        <div>
+        <div className="w-1/2 flex flex-col gap-2">
+          <label htmlFor="role" className="text-gray-700">
+            Role
+          </label>
           <input
-            className=" p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
+            id="role"
+            className="p-3 border border-[#BFC1C4] rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-700 focus:ring-blue-500"
             {...register("role")}
             type="text"
+            placeholder="Enter your role"
           />
-          {errors.role?.type === "required" && (
-            <p className="text-red-600">Role is required</p>
+          {errors.role && (
+            <p className="text-red-600 text-sm">{errors.role.message}</p>
           )}
         </div>
       </div>
-
-      <div className="container flex justify-between">
-        <label>Reporting Manager</label>
-        <div>
-          <input
-            className=" p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
-            {...register("reportingManager")}
-            type="text"
-          />
-          {errors.reportingManager?.type === "required" && (
-            <p className="text-red-600">Reporting Manager is required</p>
-          )}
-        </div>
+      <div className="w-full flex flex-col gap-2">
+        <label htmlFor="reportingManager" className="text-gray-700">
+          Reporting Manager
+        </label>
+        <input
+          id="reportingManager"
+          className="p-3 border border-[#BFC1C4] rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-700 focus:ring-blue-500"
+          {...register("reportingManager")}
+          type="text"
+          placeholder="Enter the reporting manager's name"
+        />
+        {errors.reportingManager && (
+          <p className="text-red-600 text-sm">
+            {errors.reportingManager.message}
+          </p>
+        )}
       </div>
 
-      <Button type="submit" color="primary" variant="contained">
+      <Button
+        type="submit"
+        color="primary"
+        variant="contained"
+        className="w-full py-3 mt-6 rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+      >
         Signup
       </Button>
-      <Link to="/">Already Registered? | Login </Link>
+      <Link to="/" className="text-blue-600 text-sm mt-3 hover:underline">
+        Already Registered? | Login
+      </Link>
     </form>
   );
 }

@@ -1,4 +1,3 @@
-import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
 import AppsIcon from "@mui/icons-material/Apps";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -41,9 +40,6 @@ export default function ClippedDrawer() {
         <Toolbar>
           <div className="left w-1/8 flex justify-between ">
             <Stack direction="row" spacing={1}>
-              <IconButton aria-label="Switch">
-                <SwitchLeftIcon className="text-[#BFC1C4]" />
-              </IconButton>
               <IconButton aria-label="App">
                 <AppsIcon className="text-[#BFC1C4]" />
               </IconButton>
@@ -74,7 +70,26 @@ export default function ClippedDrawer() {
                 <SettingsIcon className="text-[#BFC1C4]" />
               </IconButton>
               <IconButton aria-label="Profile">
-                <Person2Icon className="text-[#BFC1C4]" />
+                {!state.auth.isAuthenticated ? (
+                  <Button
+                    sx={{ width: "80%", marginX: "15px", color: "#bfc1c4" }}
+                    type="submit"
+                    color="primary"
+                    size="small"
+                    // color: "#bfc1c4"
+                    variant="outlined"
+                    onClick={() => {}}
+                  >
+                    <Link to="/">Login </Link>
+                  </Button>
+                ) : (
+                  <div className="flex flex-col justify-center items-center">
+                    <Person2Icon className="text-[#BFC1C4]" />
+                    <p className="text-[#BFC1C4] text-sm">
+                      {state.auth.user?.fullName}
+                    </p>
+                  </div>
+                )}
               </IconButton>
             </Stack>
           </div>
@@ -128,21 +143,12 @@ export default function ClippedDrawer() {
             ))}
           </List>
           {!state.auth.isAuthenticated ? (
-            <Button
-              sx={{ width: "80%", marginX: "15px", color: "#bfc1c4" }}
-              type="submit"
-              color="info"
-              // color: "#bfc1c4"
-              variant="outlined"
-              onClick={() => {}}
-            >
-              <Link to="/">Login </Link>
-            </Button>
+            ""
           ) : (
             <Button
               sx={{ width: "80%", marginX: "15px", color: "#bfc1c4" }}
               type="submit"
-              color="info"
+              color="primary"
               // color: "#bfc1c4"
               variant="outlined"
               onClick={() => {

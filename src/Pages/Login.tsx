@@ -7,14 +7,20 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { login } from "../redux/authSlice";
 import { useEffect } from "react";
+import JiralogoBGW from "../assets/jiralogoBGW.png";
 
 interface IFormInput {
   email: string;
   password: string;
 }
 
+let EMAIL_REGX = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 const userSchema = yup.object().shape({
-  email: yup.string().email("Invalid email address").required("Required"),
+  // email: yup.string().email("Invalid email address").required("Required"),
+  email: yup
+    .string()
+    .required("Email address Required")
+    .matches(EMAIL_REGX, "Invalid Email"),
   password: yup
     .string()
     .min(8, "Must be at least 8 characters")
@@ -46,45 +52,45 @@ export default function Login() {
 
   return (
     <form
-      className="w-1/3 m-auto mt-10 p-5 flex flex-col items-center gap-5 border border-[#BFC1C4] rounded-[6px]"
+      className="w-1/3 m-auto mt-10 p-8 bg-white shadow-lg rounded-lg flex flex-col items-center gap-4 border border-[#BFC1C4]"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h1 className="font-bold">Login Page</h1>
-      <div className="container flex justify-between">
-        <label>Email</label>
-        <div>
+      <div>
+        <img className="h-20" src={JiralogoBGW} />
+        <h1 className="text-2xl font-bold text-center text-gray-700">
+          Login Page
+        </h1>
+      </div>
+      <div className="flex gap-1 w-full">
+        <div className="w-full flex flex-col gap-2">
+          <label htmlFor="email" className="text-gray-700">
+            Email
+          </label>
           <input
-            className=" p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
-            {...register("email", { required: true })}
-            type="email"
+            id="email"
+            className="p-3 border border-[#BFC1C4] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 placeholder-gray-400"
+            {...register("email")}
+            placeholder="Enter your email"
           />
-          {errors.email?.type === "required" && (
-            <p className="text-red-600">Email is required</p>
-          )}
-          {errors.email?.type === "email" && (
-            <p className="text-red-600">Invalid email address</p>
+          {errors.email && (
+            <p className="text-red-600 text-sm">{errors.email.message}</p>
           )}
         </div>
       </div>
-      <div className="container flex justify-between">
-        <label>Password</label>
-        <div>
+      <div className="flex gap-1 w-full">
+        <div className="w-full flex flex-col gap-2">
+          <label htmlFor="password" className="text-gray-700">
+            Password
+          </label>
           <input
-            className="p-1 pl-[25px] border border-[#BFC1C4] rounded-[6px]"
-            {...register("password", {
-              required: "Password is required",
-              minLength: {
-                value: 8,
-                message: "This input must exceed 8 characters",
-              },
-            })}
+            id="password"
+            className="p-3 border border-[#BFC1C4] rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-700 focus:ring-blue-500"
+            {...register("password")}
             type="password"
+            placeholder="Enter your password"
           />
-          {errors.password?.type === "required" && (
-            <p className="text-red-600 ">Password is required</p>
-          )}
-          {errors.password?.type === "min" && (
-            <p className="text-red-600">Password must be 8 characters</p>
+          {errors.password && (
+            <p className="text-red-600 text-sm">{errors.password.message}</p>
           )}
         </div>
       </div>
@@ -92,10 +98,18 @@ export default function Login() {
       {state.auth.isAuthenticated && "Login successful!"}
       {state.auth.error && "Invalid Email or Password"}
 
-      <Button type="submit" color="primary" variant="contained">
+      <Button
+        type="submit"
+        color="primary"
+        variant="contained"
+        className="w-full py-3 mt-6 rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+      >
         Login
       </Button>
-      <Link to="/signup">Create your account</Link>
+
+      <Link to="/signup" className="text-blue-600 text-sm mt-3 hover:underline">
+        Create your account
+      </Link>
     </form>
   );
 }
