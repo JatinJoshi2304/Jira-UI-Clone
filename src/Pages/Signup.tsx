@@ -1,11 +1,11 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import Button from "@mui/material/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { signup } from "../redux/authSlice";
 import JiralogoBGW from "../assets/jiralogoBGW.png";
+import { useAppDispatch } from "../hooks/redux-hooks";
+import { register as registerUser } from "../slices/authSlice";
 
 enum departmentEnum {
   Mern = "Mern",
@@ -13,12 +13,17 @@ enum departmentEnum {
   HR = "HR",
 }
 
+enum roleEnum {
+  developer = "developer",
+  manager = "manager",
+}
+
 interface IFormInput {
   fullName: string;
   email: string;
   password: string;
   department: departmentEnum;
-  role: string;
+  role: roleEnum;
   reportingManager: string;
 }
 
@@ -43,10 +48,9 @@ const userSchema = yup.object().shape({
     .required("Required")
     .oneOf(Object.values(departmentEnum), "Invalid department"),
   role: yup
-    .string()
+    .mixed<roleEnum>()
     .required("Required")
-    .max(50, "Role should not exceed 50 Characters")
-    .matches(NAME_REGX, "Invalid Role"),
+    .oneOf(Object.values(roleEnum), "Invalid Role"),
   reportingManager: yup
     .string()
     .required("Required")
@@ -55,7 +59,6 @@ const userSchema = yup.object().shape({
 });
 
 export default function App() {
-  const navigate = useNavigate();
   const {
     register,
     formState: { errors },
@@ -64,12 +67,21 @@ export default function App() {
     resolver: yupResolver(userSchema),
     mode: "onTouched",
   });
+  const navigate = useNavigate();
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    dispatch(signup(data));
-    navigate("/");
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    try {
+      await dispatch(registerUser(data))
+        .unwrap()
+        .then(() => {
+          console.log("User registered successfully");
+          navigate("/");
+        });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -153,16 +165,20 @@ export default function App() {
         </div>
 
         <div className="w-1/2 flex flex-col gap-2">
-          <label htmlFor="role" className="text-gray-700">
+          <label htmlFor="department" className="text-gray-700">
             Role
           </label>
-          <input
-            id="role"
+          <select
+            id="department"
             className="p-3 border border-[#BFC1C4] rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-700 focus:ring-blue-500"
             {...register("role")}
-            type="text"
-            placeholder="Enter your role"
-          />
+          >
+            <option value="" selected disabled hidden>
+              Choose a role
+            </option>
+            <option value="developer">developer</option>
+            <option value="manager">Manager</option>
+          </select>
           {errors.role && (
             <p className="text-red-600 text-sm">{errors.role.message}</p>
           )}

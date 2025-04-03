@@ -18,15 +18,23 @@ import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../redux/authSlice";
+import {
+  //useDispatch
+  useSelector,
+} from "react-redux";
+
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 const drawerWidth = 240;
 
 export default function ClippedDrawer() {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const state: any = useSelector((state) => state);
+  useEffect(() => {
+    console.log("satt:", state.auth.basicUserInfo.user);
+  }, [state]);
+  console.log("user :: ", state.user);
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -70,7 +78,7 @@ export default function ClippedDrawer() {
                 <SettingsIcon className="text-[#BFC1C4]" />
               </IconButton>
               <IconButton aria-label="Profile">
-                {!state.auth.isAuthenticated ? (
+                {!state.auth.basicUserInfo.user ? (
                   <Button
                     sx={{ width: "80%", marginX: "15px", color: "#bfc1c4" }}
                     type="submit"
@@ -86,7 +94,7 @@ export default function ClippedDrawer() {
                   <div className="flex flex-col justify-center items-center">
                     <Person2Icon className="text-[#BFC1C4]" />
                     <p className="text-[#BFC1C4] text-sm">
-                      {state.auth.user?.fullName}
+                      {state.auth.basicUserInfo.user.fullName}
                     </p>
                   </div>
                 )}
@@ -151,9 +159,9 @@ export default function ClippedDrawer() {
               color="primary"
               // color: "#bfc1c4"
               variant="outlined"
-              onClick={() => {
-                dispatch(logout());
-              }}
+              // onClick={() => {
+              //   dispatch(logout());
+              // }}
             >
               Logout
             </Button>

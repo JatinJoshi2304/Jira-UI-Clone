@@ -2,13 +2,13 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import Button from "@mui/material/Button";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { login } from "../redux/authSlice";
 import { useEffect } from "react";
 import JiralogoBGW from "../assets/jiralogoBGW.png";
-
+import { useAppDispatch } from "../hooks/redux-hooks";
+import { login } from "../slices/authSlice";
 interface IFormInput {
   email: string;
   password: string;
@@ -16,7 +16,6 @@ interface IFormInput {
 
 let EMAIL_REGX = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 const userSchema = yup.object().shape({
-  // email: yup.string().email("Invalid email address").required("Required"),
   email: yup
     .string()
     .required("Email address Required")
@@ -36,11 +35,18 @@ export default function Login() {
     formState: { errors },
     handleSubmit,
   } = useForm<IFormInput>({ resolver: yupResolver(userSchema) });
-  const dispatch = useDispatch();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
-    const user = { email: data.email, password: data.password };
-    dispatch(login(user));
+  const dispatch = useAppDispatch();
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    try {
+      await dispatch(login(data))
+        .unwrap()
+        .then((data) => {
+          console.log("Login successful", data);
+          navigate("/dashboard");
+        });
+    } catch (e) {
+      console.error(e);
+    }
     // navigate("/dashboard");
   };
 

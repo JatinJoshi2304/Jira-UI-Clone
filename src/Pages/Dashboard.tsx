@@ -6,17 +6,23 @@ const Dashboard = () => {
   return (
     <>
       <NavbarComponent />
-      {state.auth.isAuthenticated ? (
+      {state.auth.basicUserInfo.user ? (
         <div className="ml-65">
           <div className="main">Profile</div>
-          <div className="continer">FullName : {state.auth.user?.fullName}</div>
-          <div className="continer">Email : {state.auth.user?.email}</div>
           <div className="continer">
-            Department : {state.auth.user?.department}
+            FullName : {state.auth.basicUserInfo.user.fullName}
           </div>
-          <div className="continer">Role : {state.auth.user?.role}</div>
           <div className="continer">
-            Reporting Manager : {state.auth.user?.reportingManager}
+            Email : {state.auth.basicUserInfo.user.email}
+          </div>
+          <div className="continer">
+            Department : {state.auth.basicUserInfo.user.department}
+          </div>
+          <div className="continer">
+            Role : {state.auth.basicUserInfo.user.role}
+          </div>
+          <div className="continer">
+            Reporting Manager : {state.auth.basicUserInfo.user.reportingManager}
           </div>
         </div>
       ) : (
